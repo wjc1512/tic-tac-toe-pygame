@@ -16,6 +16,9 @@ game_over = False
 pos = []
 board = [[0,0,0],[0,0,0],[0,0,0]]
 players_list = [1,2]
+player1_win_counter = 0
+player2_win_counter = 0
+tie_counter = 0
 
 #define color variables
 WHITE = (255,255,255)
@@ -27,35 +30,84 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("TicTacToe")
 
 def main():
+    global winner
+    global draw_counter
+    global game_over 
+    global pos
+    global board 
+    global players_list 
+    global player1_win_counter
+    global player2_win_counter
+    global tie_counter
+
     clock = pygame.time.Clock()
     run = True
     clicked = False
+    next_round = False
     while run:  
-        clock.tick(FPS)
-        draw_window()
-        draw_board()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if game_over == 0:
-                if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
-                    clicked = True
-                if event.type == pygame.MOUSEBUTTONUP and clicked == True:
-                    clicked = False
-                    pos = pygame.mouse.get_pos()
-                    cell_x = pos[0]
-                    cell_y = pos[1]
-                    if board[cell_x // 100][cell_y // 100] == 0:
-                        current_player = players_list[0]
-                        players_list.append(players_list.pop(0))
-                        board[cell_x // 100][cell_y // 100] = current_player
-                        check_winner(current_player)
-        if game_over == True:
-            display_winner(winner)
-        if draw_counter == 9:
-            display_draw()
+        if next_round == False:
+            clock.tick(FPS)
+            draw_window()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                if game_over == 0:
+                    if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
+                        clicked = True
+                    if event.type == pygame.MOUSEBUTTONUP and clicked == True:
+                        clicked = False
+                        pos = pygame.mouse.get_pos()
+                        cell_x = pos[0]
+                        cell_y = pos[1]
+                        if board[cell_x // 100][cell_y // 100] == 0:
+                            current_player = players_list[0]
+                            players_list.append(players_list.pop(0))
+                            board[cell_x // 100][cell_y // 100] = current_player
+                            check_winner(current_player)
+            draw_board()
+            if game_over == True:
+                if winner == 1:
+                    player1_win_counter += 1
+                else:
+                    player2_win_counter += 1
+                while next_round == False:
+                    display_winner(winner)
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                        if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
+                            clicked = True
+                        if event.type == pygame.MOUSEBUTTONUP and clicked == True:
+                            clicked = False
+                            next_round = True
+                    pygame.display.update()
+
+            elif draw_counter == 9:
+                tie_counter += 1
+                while next_round == False:
+                    display_draw()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                        if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
+                            clicked = True
+                        if event.type == pygame.MOUSEBUTTONUP and clicked == True:
+                            clicked = False
+                            next_round = True
+                    pygame.display.update()
+        else:
+            winner = 0 
+            draw_counter = 0
+            game_over = False
+            pos = []
+            board = [[0,0,0],[0,0,0],[0,0,0]]
+            players_list = [1,2]
+
+            next_round = False
+            WIN.fill(WHITE)
         pygame.display.update()
     pygame.quit()
+
 
 def draw_window():
     WIN.fill(BLACK) 
@@ -108,17 +160,32 @@ def check_winner(current_player):
     draw_counter += 1
 
 def display_winner(winner):
-    win_text = f"Player{winner} is the winner!"
-    win_img = font.render(win_text, True, BLUE)
-    pygame.draw.rect(WIN, GREEN, (WIDTH // 2 - 100, HEIGHT // 2 - 60, 200 ,50))
-    WIN.blit(win_img, (WIDTH // 2 - 100, HEIGHT // 2 - 50))
+    if winner == 1:
+        sym = "X" 
+    else:
+        sym = "O"
+    text = f"Player{winner}({sym}) wins!"
+    display_score(text, GREEN)
 
 #draw-outcome condition
 def display_draw():
-    draw_text = f"It's a draw!"
-    draw_img = font.render(draw_text, True, BLUE)
-    pygame.draw.rect(WIN, GREEN, (WIDTH // 2 - 100, HEIGHT // 2 - 60, 200 ,50))
-    WIN.blit(draw_img, (WIDTH // 2 - 100, HEIGHT // 2 - 50))
+    text = f"It's a draw!"
+    display_score(text, WHITE)
+
+def display_score(txt, color):
+    global player1_win_counter
+    global player2_win_counter 
+    global tie_counter
+
+    WIN.fill(BLACK)
+    text = font.render(txt, True, color)
+    text_rect = text.get_rect(center=(WIDTH/2, 100))
+    WIN.blit(text, text_rect)
+    WIN.blit(font.render("Score:", True, WHITE), text.get_rect(center=(WIDTH/2,150)))
+    WIN.blit(font.render(f"Player1(X): {player1_win_counter}", True, WHITE), text.get_rect(center=(WIDTH/2,170)))
+    WIN.blit(font.render(f"Player2(O): {player2_win_counter}", True, WHITE), text.get_rect(center=(WIDTH/2,190)))
+    WIN.blit(font.render(f"Draw: {tie_counter}", True, WHITE), text.get_rect(center=(WIDTH/2, 210)))
+    WIN.blit(font.render(f"Click to continue...", True, WHITE), text.get_rect(center=(WIDTH/2, 230)))
 
 if __name__ == "__main__":
     main()
