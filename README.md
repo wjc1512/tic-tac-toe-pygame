@@ -1,6 +1,16 @@
 # tic-tac-toe-pygame
 Utilising one of Python's library (Pygame) to create a simple tic-tac-toe game
 
+
+https://user-images.githubusercontent.com/96508542/216761968-b277fbdf-c6dc-4df8-9f7b-59a20444bdd3.mp4
+
+
+
+<video width="200" height="100" autoplay muted>
+  https://user-images.githubusercontent.com/96508542/216761968-b277fbdf-c6dc-4df8-9f7b-59a20444bdd3.mp4
+  Your browser does not support the video tag.
+</video>
+
 <h2> How to run </h2>
 <pre>
  git clone https://github.com/wjc1512/tic-tac-toe-pygame.git
