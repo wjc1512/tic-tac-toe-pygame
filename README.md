@@ -23,7 +23,7 @@ https://user-images.githubusercontent.com/96508542/216761968-b277fbdf-c6dc-4df8-
 <p>2) Each player makes decision on position to place symbol from available grid</p>
 <p>3) Outcomes of decision made by each player will be checked</p>
 <p>4) Results will be displayed when either player wins or match ends with a draw</p>
-<p>5) Players get to view match result and tracked score when results are displayed</p>
+<p>5) Players get to view the match result and tracked score when results are displayed</p>
 <p>6) Players can proceed onto the next match by clicking anywhere on the screen</p>
 
 <h2> Screenshots </h2>
